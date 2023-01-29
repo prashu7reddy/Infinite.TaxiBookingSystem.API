@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infinite.TaxiBookingSystem.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230128120306_UpdateUserTable")]
-    partial class UpdateUserTable
+    [Migration("20230128170823_InitialModel")]
+    partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,10 +226,13 @@ namespace Infinite.TaxiBookingSystem.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int>("CustomerID")
                         .HasColumnType("int");
 
-                    b.Property<string>("EmailId")
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LoginID")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -241,11 +244,11 @@ namespace Infinite.TaxiBookingSystem.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("EmployeeID");
 
                     b.ToTable("Users");
                 });
@@ -323,6 +326,25 @@ namespace Infinite.TaxiBookingSystem.API.Migrations
                     b.Navigation("TaxiModel");
 
                     b.Navigation("TaxiType");
+                });
+
+            modelBuilder.Entity("Infinite.TaxiBookingSystem.API.Models.User", b =>
+                {
+                    b.HasOne("Infinite.TaxiBookingSystem.API.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infinite.TaxiBookingSystem.API.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

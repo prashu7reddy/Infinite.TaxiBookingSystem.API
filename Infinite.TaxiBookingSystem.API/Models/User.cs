@@ -6,22 +6,27 @@ using System.Threading.Tasks;
 
 namespace Infinite.TaxiBookingSystem.API.Models
 {
-    public class User:LoginModel
+    public class User : LoginModel
     {
         public int Id { get; set; }
-        
-        [Required]
-        public int CustomerId { get; set; }
-        [Required]
-        public string EmailId { get; set; }
+
+
+        public int EmployeeID { get; set; }
+
+        public int CustomerID { get; set; }
+
         [Required]
         public string Role { get; set; }
-    }
 
+        public Employee Employee { get; set; }
+        public Customer Customer { get; set; }
+    }
     public class LoginModel
     {
         [Required]
-        public string UserName { get; set; }
+        public string LoginID { get; set; }
+
+
         [Required]
         public string Password { get; set; }
     }

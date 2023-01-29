@@ -27,45 +27,36 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             _dbContext = dbContext;
         }
 
-        [HttpPost]
-        public IActionResult Login(LoginModel login) 
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody] LoginModel login)
         {
-            var currentUser = _dbContext.Users.FirstOrDefault(x => x.UserName == login.UserName && x.Password == login.Password);
-            if(currentUser == null)
+            var currentUser = _dbContext.Users.FirstOrDefault(x => x.LoginID == login.LoginID && x.Password == login.Password);
+            if (currentUser == null)
             {
-                return NotFound("Invalud username or password");
+                return NotFound("Invalid LoginID  or  Password");
             }
             var token = GenerateToken(currentUser);
-            if(token == null)
+            if (token == null)
             {
-                return NotFound("Invalid Credentials");
+                return NotFound("Invalid credentials");
             }
             return Ok(token);
         }
-
         [NonAction]
         public string GenerateToken(User user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
-
-            var myClaims = new List<Claim>
+            var securitykey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secretkey"]));
+            var credentials = new SigningCredentials(securitykey, SecurityAlgorithms.HmacSha512);
+            var myclaims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name,user.UserName),
                 new Claim(ClaimTypes.Role,user.Role),
-                new Claim(ClaimTypes.Email, user.EmailId)
             };
-
             var token = new JwtSecurityToken(issuer: _configuration["JWT:issuer"],
-                //audience: _configuration["JWT:audience"],
-                claims: myClaims,
-                expires: DateTime.Now.AddDays(2),
-                signingCredentials: credentials
-                );
-            
-            var tokens = new JwtSecurityTokenHandler().WriteToken(token);
+                                            
+                                            claims: myclaims, expires: DateTime.Now.AddDays(1),
+                                            signingCredentials: credentials);
+            return new JwtSecurityTokenHandler().WriteToken(token);
 
-            return tokens;
         }
     }
 }

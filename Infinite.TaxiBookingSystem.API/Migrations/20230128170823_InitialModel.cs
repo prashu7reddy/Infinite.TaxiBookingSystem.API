@@ -151,6 +151,35 @@ namespace Infinite.TaxiBookingSystem.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EmployeeID = table.Column<int>(type: "int", nullable: false),
+                    CustomerID = table.Column<int>(type: "int", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LoginID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Customers_CustomerID",
+                        column: x => x.CustomerID,
+                        principalTable: "Customers",
+                        principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_Employees_EmployeeID",
+                        column: x => x.EmployeeID,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Bookings",
                 columns: table => new
                 {
@@ -211,6 +240,16 @@ namespace Infinite.TaxiBookingSystem.API.Migrations
                 name: "IX_Taxis_TaxiTypeId",
                 table: "Taxis",
                 column: "TaxiTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_CustomerID",
+                table: "Users",
+                column: "CustomerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_EmployeeID",
+                table: "Users",
+                column: "EmployeeID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -225,10 +264,13 @@ namespace Infinite.TaxiBookingSystem.API.Migrations
                 name: "UserRoles");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Taxis");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "Employees");
