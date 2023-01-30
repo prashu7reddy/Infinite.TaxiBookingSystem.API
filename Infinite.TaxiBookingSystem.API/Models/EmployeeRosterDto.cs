@@ -12,6 +12,8 @@ namespace Infinite.TaxiBookingSystem.API.Models
         public DateTime ToDate { get; set; }
         public DateTime InTime { get; set; }
         public DateTime OutTime { get; set; }
+
+
         public int EmployeeId { get; set; }
 
         public string EmployeeName { get; set; }

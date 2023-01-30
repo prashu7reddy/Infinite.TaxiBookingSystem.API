@@ -31,6 +31,7 @@ namespace Infinite.TaxiBookingSystem.API.Repositories
 public interface IEmployeeRepository
 {
     Task<IEnumerable<Designation>> GetDesignations();
+    
 }
 
 public interface IBookingRepository
@@ -39,6 +40,8 @@ public interface IBookingRepository
     Task<IEnumerable<TaxiType>> GetTaxiTypes();
     //Task<IEnumerable<Booking>> SearchByTaxi(string taxiModel);
 }
+
+
 
 
 

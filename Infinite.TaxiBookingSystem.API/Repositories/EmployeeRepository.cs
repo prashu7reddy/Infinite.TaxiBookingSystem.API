@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infinite.TaxiBookingSystem.API.Repositories
 {
-    public class EmployeeRepository : IRepository<Employee>,IGetRepository<Employee>,IEmployeeRepository
+    public class EmployeeRepository : IRepository<Employee>,IGetRepository<EmployeeDto>,IEmployeeRepository
     {
         private readonly ApplicationDbContext _Context;
 
@@ -37,14 +37,39 @@ namespace Infinite.TaxiBookingSystem.API.Repositories
             return null;
         }
 
-        public IEnumerable<Employee> GetAll()
+        public IEnumerable<EmployeeDto> GetAll()
         {
-            return _Context.Employees.ToList();
-        }
+            var employees = _Context.Employees.Include(x => x.Designation).Select(x => new EmployeeDto
+            {
+                EmployeeId = x.EmployeeId,
+                EmployeeName = x.EmployeeName,
+                DesignationId = x.DesignationId,
+                PhoneNo = x.PhoneNo,
+                EmailId = x.EmailId,
+                Address = x.Address,
+                DrivingLicenseNo = x.DrivingLicenseNo,
+                DesignationName = x.Designation.DesignationName
+            }).ToList();
+            return employees;
+                
+                }
 
-        public async Task<Employee> GetById(int id)
+        
+
+        public async Task<EmployeeDto> GetById(int id)
         {
-            var employee = await _Context.Employees.FindAsync(id);
+            var employees = await _Context.Employees.Include(x => x.Designation).Select(x => new EmployeeDto
+            {
+                EmployeeId = x.EmployeeId,
+                EmployeeName = x.EmployeeName,
+                DesignationId = x.DesignationId,
+                PhoneNo = x.PhoneNo,
+                EmailId = x.EmailId,
+                Address = x.Address,
+                DrivingLicenseNo = x.DrivingLicenseNo,
+                DesignationName = x.Designation.DesignationName
+            }).ToListAsync();
+            var employee = employees.FirstOrDefault(x => x.EmployeeId == id);
             if(employee != null)
             {
                 return employee;

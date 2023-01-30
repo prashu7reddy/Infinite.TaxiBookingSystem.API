@@ -14,26 +14,27 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly IRepository<Employee> _repository;
-        private readonly IGetRepository<Employee> _getRepository;
+        private readonly IGetRepository<EmployeeDto> _employeeDtoRepository;
         private readonly IEmployeeRepository _employeeRepository;
+        
 
-        public EmployeesController(IRepository<Employee> repository,IGetRepository<Employee> getRepository, IEmployeeRepository employeeRepository)
+        public EmployeesController(IRepository<Employee> repository,IGetRepository<EmployeeDto> employeeDtoRepository, IEmployeeRepository employeeRepository)
         {
             _repository = repository;
-            _getRepository = getRepository;
+            _employeeDtoRepository = employeeDtoRepository;
             _employeeRepository = employeeRepository;
         }
 
         [HttpGet("GetAllEmployees")]
-        public IEnumerable<Employee> GetEmployees()
+        public IEnumerable<EmployeeDto> GetEmployees()
         {
-            return _getRepository.GetAll();
+            return _employeeDtoRepository.GetAll();
         }
 
         [HttpGet("GetEmployeeById/{id}",Name ="GetEmployeeById")]
         public async Task<IActionResult> GetEmployeeById(int id)
         {
-            var employee =await _getRepository.GetById(id);
+            var employee =await _employeeDtoRepository.GetById(id);
             if (employee!= null)
             {
                 return Ok(employee);
@@ -84,5 +85,8 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             var designations = await _employeeRepository.GetDesignations();
             return Ok(designations);
         }
+
+
+
     }
 }
