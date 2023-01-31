@@ -34,6 +34,11 @@ public interface IEmployeeRepository
     
 }
 
+public interface IUsersRepository
+{
+    Task<IEnumerable<UserRole>> GetUsers();
+}
+
 public interface IBookingRepository
 {
     Task<IEnumerable<TaxiModel>> GetTaxiModels();

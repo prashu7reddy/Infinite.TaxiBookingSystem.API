@@ -38,6 +38,7 @@ namespace Infinite.TaxiBookingSystem.API
                 ValidateIssuer = true,
                 
                 ValidateLifetime = true,
+                ValidateAudience = false,
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = Configuration["JWT:issuer"],
                 
@@ -52,6 +53,10 @@ namespace Infinite.TaxiBookingSystem.API
             services.AddScoped<IRepository<Customer>, CustomerRepository>();
             services.AddScoped<IEmployeeRosterRepository, EmployeeRosterRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
+            
+           
+
 
             services.AddScoped<IGetRepository<EmployeeRosterDto>, EmployeeRosterRepository>();
             services.AddScoped<IGetRepository<EmployeeDto>, EmployeeRepository>();

@@ -58,5 +58,6 @@ namespace Infinite.TaxiBookingSystem.API.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
+       
     }
 }
